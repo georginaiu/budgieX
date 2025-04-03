@@ -11,13 +11,14 @@
 	html, body {
       	margin: 0;
       	padding: 0;
-     	height: 100%;
+      	height: 100%; /* Ensures full height for Flexbox centering */
       	display: flex;
-      	justify-content: center; /* Horizontal centering */
-      	align-items: center;    /* Vertical centering */
+      	flex-direction: column; /* Optional, but helpful if needed for stacking elements */
+      	justify-content: center; /* Vertically centers content */
+      	align-items: center;    /* Horizontally centers content */
     	}
     	div {
-      	text-align: center; /* Ensures text inside the div is centered */
+      	text-align: center; /* Centers text inside the element */
     	}
 		
 	.button {

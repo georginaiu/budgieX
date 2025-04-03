@@ -61,7 +61,7 @@
 <body>
   <div class="birdhouse-wrapper">
     <!-- Birdhouse image -->
-    <img src="C:\Users\ut2hj\Desktop\html\birdhouse.jpeg" alt="Birdhouse Image" class="birdhouse">
+    <img src="birdhouse.jpeg" alt="Birdhouse Image" class="birdhouse">
 
     <!-- Circular button -->
     <div class="circle-button" onclick="accumulateEntrance()">

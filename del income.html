@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income WebApp</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: center; /* Aligns all text and numbers to the center */
+            padding: 8px;
+            border: 2px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4; /* Optional: Add a background color to table headers */
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9; /* Optional: Alternate row background for better readability */
+        }
+    </style>
+    <script>
+        function saveEntry() {
+            const userNumber = parseFloat(document.getElementById("numberInput").value);
+            if (isNaN(userNumber) || userNumber === 0) {
+                alert("Please enter a valid non-zero number.");
+                return;
+            }
+
+            const category = document.getElementById("categorySelect").value;
+            if (!category || category === "Select Category") {
+                alert("Please choose a valid category.");
+                return;
+            }
+
+            const paymentMethod = document.getElementById("paymentSelect").value;
+            if (!paymentMethod || paymentMethod === "Select Payment Method") {
+                alert("Please choose a valid payment method.");
+                return;
+            }
+
+            const currentDate = new Date().toLocaleDateString("en-GB"); // Get current date in dd/mm/yyyy format
+            const entry = { date: currentDate, amount: userNumber, category: category, paymentMethod: paymentMethod };
+
+            // Save entry to a new localStorage key "expenseEntries"
+            const savedEntries = JSON.parse(localStorage.getItem("expenseEntries")) || [];
+            savedEntries.push(entry);
+            localStorage.setItem("expenseEntries", JSON.stringify(savedEntries));
+
+            // Add entry to the table
+            addEntryToTable(entry, savedEntries.length - 1);
+
+            // Clear input fields
+            document.getElementById("numberInput").value = "";
+            document.getElementById("categorySelect").value = "Category";
+            document.getElementById("paymentSelect").value = "Payment Method";
+        }
+
+        function addEntryToTable(entry, index) {
+            const table = document.getElementById("entriesTable").getElementsByTagName("tbody")[0];
+            const newRow = table.insertRow();
+            const dateCell = newRow.insertCell(0);
+            const amountCell = newRow.insertCell(1);
+            const categoryCell = newRow.insertCell(2);
+            const paymentCell = newRow.insertCell(3);
+            const deleteCell = newRow.insertCell(4);
+
+            dateCell.innerText = entry.date;
+            amountCell.innerText = entry.amount.toFixed(2);
+            categoryCell.innerText = entry.category;
+            paymentCell.innerText = entry.paymentMethod;
+            deleteCell.innerHTML = `<button onclick="deleteEntry(${index})">Delete</button>`;
+        }
+
+        function deleteEntry(index) {
+            const savedEntries = JSON.parse(localStorage.getItem("expenseEntries")) || [];
+
+            // Remove the entry at the given index
+            if (index > -1 && index < savedEntries.length) {
+                savedEntries.splice(index, 1);
+                localStorage.setItem("expenseEntries", JSON.stringify(savedEntries));
+            }
+
+            // Refresh the table
+            loadEntries();
+        }
+
+        function loadEntries() {
+            const savedEntries = JSON.parse(localStorage.getItem("expenseEntries")) || [];
+            const tableBody = document.getElementById("entriesTable").getElementsByTagName("tbody")[0];
+            tableBody.innerHTML = ""; // Clear existing rows
+
+            savedEntries.forEach((entry, index) => {
+                addEntryToTable(entry, index);
+            });
+        }
+
+        function generateMonthlySummary() {
+            const savedEntries = JSON.parse(localStorage.getItem("expenseEntries")) || [];
+            const monthYearTotals = {};
+
+            savedEntries.forEach(entry => {
+                const [day, month, year] = entry.date.split('/');
+                const monthYear = `${getMonthName(month)} ${year}`;
+
+                if (!monthYearTotals[monthYear]) {
+                    monthYearTotals[monthYear] = 0;
+                }
+                monthYearTotals[monthYear] += parseFloat(entry.amount);
+            });
+
+            const summaryTable = document.getElementById("summaryTableBody");
+            summaryTable.innerHTML = ""; // Clear previous rows
+            Object.entries(monthYearTotals).forEach(([monthYear, totalAmount]) => {
+                const newRow = summaryTable.insertRow();
+                const monthCell = newRow.insertCell(0);
+                const totalCell = newRow.insertCell(1);
+                monthCell.innerText = monthYear;
+                totalCell.innerText = totalAmount.toFixed(2);
+            });
+        }
+
+        function getMonthName(monthNumber) {
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            return monthNames[parseInt(monthNumber) - 1];
+        }
+
+        // Load entries when the page loads
+        window.onload = loadEntries;
+    </script>
+</head>
+<body>
+    <h1>Income!</h1>
+    <label for="numberInput">Enter an amount:</label>
+    <input type="number" id="numberInput" placeholder="Type a number here">
+    <br>
+    <label for="categorySelect">Select a category:</label>
+    <select id="categorySelect">
+        <option value="Select Category">Select Category</option>
+        <option value="Salary">Salary</option>
+        <option value="Cash">Cash</option>
+        <option value="Other">Other</option>
+    </select>
+    <br>
+    <label for="paymentSelect">Select a payment method:</label>
+    <select id="paymentSelect">
+        <option value="Select Payment Method">Select Payment Method</option>
+        <option value="Cash">Cash</option>
+        <option value="Transfer">Transfer</option>
+    </select>
+    <br>
+    <button onclick="saveEntry()">Save Entry</button>
+    <button onclick="generateMonthlySummary()">Generate Monthly Summary</button>
+    <h2>Saved Entries</h2>
+    <table id="entriesTable" border="1">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Payment Method</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <h2>Monthly Summary</h2>
+    <table id="summaryTable" border="1">
+        <thead>
+            <tr>
+                <th>Month/Year</th>
+                <th>Total Amount</th>
+            </tr>
+        </thead>
+        <tbody id="summaryTableBody">
+        </tbody>
+    </table>
+</body>
+</html>

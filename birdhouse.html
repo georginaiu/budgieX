@@ -4,8 +4,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     .birdhouse-wrapper {
-    transform: scale(2); /* Scales everything, including roof lines */
-    transform-origin: center; /* Scale from the center */
+      transform: scale(2); /* Scales everything, including roof lines */
+      transform-origin: center; /* Scale from the center */
     }
     .birdhouse {
       position: relative;
@@ -78,6 +78,12 @@
       margin-left: -20px;
       border: 2px solid black; /* Outline for entrance */
       border-radius: 50%; /* Makes it circular */
+      display: flex; /* Enables centering text */
+      align-items: center; /* Vertically centers text */
+      justify-content: center; /* Horizontally centers text */
+      font-size: 12px;
+      font-weight: bold;
+      color: black;
     }
 
   </style>
@@ -88,13 +94,30 @@
     <div class="roof-line-left"></div>
     <div class="roof-line-right"></div>
     <!-- Triangle button with text -->
-      <div class="triangle-button">
+    <div class="triangle-button" onclick="accumulateEntrance()">
         <span>+Savings</span>
       </div>
       <div class="body">
-      <div class="entrance"></div>
+      <div class="entrance" id="entrance">$0</div>
     </div>
   </div>
  </div>
+<script>
+    let total = 0; // Initialize a running total
+
+    function accumulateEntrance() {
+      const userInput = prompt("Enter a value to add to savings:");
+      const parsedValue = parseFloat(userInput); // Parse the input as a number
+
+      if (!isNaN(parsedValue) && parsedValue > 0) { // Validate the input
+        total += parsedValue; // Accumulate the total
+        document.getElementById("entrance").innerText = `$${total}`; // Update the display
+      } else {
+        alert("Please enter a valid positive number!");
+      }
+    }
+  </script>
+
+
 </body>
 </html>

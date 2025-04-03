@@ -4,10 +4,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     .birdhouse-wrapper {
-      position: relative;
+      position: relative; /* This acts as the positioning context for absolute children */
       width: 300px; /* Width of the wrapper */
+      top: 120px;
       margin: 20px auto;
-      transform: scale(2); /* Scales everything inside the wrapper by 2x */
+      transform: scale(1.5); /* Scales everything inside the wrapper by 2x */
       transform-origin: center; /* Ensures scaling happens from the center */
     }
 
@@ -17,12 +18,12 @@
 
     /* Circular button */
     .circle-button {
-      position: absolute; 
-      top: 50px; /* Adjust based on the image */
+      position: absolute; /* Absolute positioning allows overlaying */
+      top: 20px; /* Adjust based on the image position */
       left: 50%; /* Center horizontally */
       transform: translateX(-50%);
-      width: 50px; /* Width of the circle */
-      height: 50px; /* Height of the circle */
+      width: 20px; /* Width of the circle */
+      height: 20px; /* Height of the circle */
       background-color: white; /* Sets the background to white */
       border-radius: 50%; /* Makes it a circle */
       cursor: pointer; 
@@ -33,15 +34,15 @@
 
     /* Text on circle button */
     .circle-button span {
-      font-size: 10px; /* Sets the text size to 8px */
+      font-size: 10px; /* Sets the text size to 10px */
       color: black; /* Keeps the text color black */
       font-weight: bold;
     }
 
     /* Circular entrance */
     .entrance {
-      position: absolute;
-      top: 120px; /* Position over the image */
+      position: absolute; /* Absolute positioning allows overlaying */
+      top: 240px; /* Position over the image */
       left: 50%; /* Center horizontally */
       transform: translateX(-50%);
       width: 40px;
@@ -53,14 +54,14 @@
       font-size: 12px;
       font-weight: bold;
       color: white;
-      background-color: white; /* Ensures visibility */
+      background-color: transparent; /* Ensures visibility */
     }
   </style>
 </head>
 <body>
   <div class="birdhouse-wrapper">
     <!-- Birdhouse image -->
-    <img src="birdhouse.jpeg" alt="Birdhouse Image" class="birdhouse">
+    <img src="C:\Users\ut2hj\Desktop\html\birdhouse.jpeg" alt="Birdhouse Image" class="birdhouse">
 
     <!-- Circular button -->
     <div class="circle-button" onclick="accumulateEntrance()">
